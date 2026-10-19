@@ -34,9 +34,9 @@ the page.
 | Tab | Owner | Outcome (positive class) | Status |
 |---|---|---|---|
 | Sleep Efficiency | Nguyen Minh Khai | Sleep efficiency below 0.85 (Ohayon et al., 2017); 55.5% of 452 people | **Live** |
-| Screen Time & Stress | Menghan Sun | Sleep quality score of 5 or below on a 1 to 10 scale | Coming soon |
+| Screen Time & Stress | Menghan Sun | Sleep quality score of 5 or below on a 1 to 10 scale | **Live** |
 | Sleep Health & Lifestyle | Jinyu Guo | Sleep duration under 7 hours (Watson et al., 2015); 41.4% of 374 records | **Live** |
-| NHANES Work & Sleep | Zhequan Fu | Workday sleep under 7 hours | Coming soon |
+| NHANES Work & Sleep | Zhequan Fu | Workday sleep under 7 hours | **Live**|
 
 Every live tab reproduces the scores in its owner's Stage 2 report. The export stops if a rebuilt model drifts
 from the report by more than 0.002.
