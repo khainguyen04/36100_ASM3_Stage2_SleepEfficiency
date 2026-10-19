@@ -1,0 +1,9 @@
+# ml/requirements.txt
+scikit-learn>=1.6
+pandas>=2.0
+numpy>=1.26
+skl2onnx>=1.18
+onnx>=1.16
+onnxruntime>=1.18
+pyyaml>=6.0
+jsonschema>=4.0

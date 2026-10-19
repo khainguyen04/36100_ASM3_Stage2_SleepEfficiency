@@ -1,0 +1,95 @@
+id: sleep-lifestyle
+status: ready
+order: 3
+title: Sleep Health & Lifestyle
+owner: {name: Jinyu Guo, studentId: "26507475"}
+source:
+  name: Sleep Health and Lifestyle Dataset
+  citation: Tharmalingam (2023)
+  url: https://www.kaggle.com/datasets/uom190346a/sleep-health-and-lifestyle-dataset
+n: 374
+
+target:
+  column: Poor Sleep
+  label: Short sleep
+  definition: Sleep duration under 7 hours a night
+  positive: Short sleep
+  negative: Enough sleep
+  citation: Watson et al. (2015)
+  prevalence: 0.4144     # whole dataset (155 of 374); the training split alone is 43.7%
+
+data:                    # written by prepare.py
+  train: data/train.csv
+  test: data/test.csv
+  cv_fold_column: cv_fold
+
+features:                # same order as Jinyu's ColumnTransformer
+  numeric: [Age, Physical Activity Level, Stress Level, Systolic BP, Diastolic BP, Heart Rate, Daily Steps]
+  categorical: [Gender, Occupation, BMI Category]
+
+preprocessing:           # no missing values in the data, so the imputers only matter for "Not sure"
+  numeric_impute: median
+  categorical_impute: {strategy: most_frequent}
+  onehot: {handle_unknown: ignore}
+  scale_for: [lr]
+
+models:                  # Jinyu's GridSearchCV choices
+  lr: {params: {C: 1, penalty: l1, solver: liblinear, max_iter: 1000}, threshold: 0.5, recommended: true}
+  dt: {params: {criterion: gini, max_depth: 3, min_samples_leaf: 1}, threshold: 0.5}
+  rf: {params: {n_estimators: 100, max_depth: 5, max_features: sqrt}, threshold: 0.5, highestF1: true}
+
+reference:               # Jinyu's Stage 2 notebook (sections 7.1 and 7.2)
+  tolerance: 0.002
+  lr: {cvF1: 0.934, testF1: 0.962}
+  dt: {cvF1: 0.973, testF1: 0.894}
+  rf: {cvF1: 0.991, testF1: 0.980}
+
+inputs:                  # shown in this order; `group` sets the form section
+  - {key: age, group: About you, feature: Age, label: Age, unit: years, control: slider, min: 18, max: 70, step: 1, default: 40}
+  - key: gender
+    group: About you
+    feature: Gender
+    label: Gender
+    control: select
+    default: Female
+    options: [{value: Female, label: Female}, {value: Male, label: Male}]
+  - key: occupation
+    group: About you
+    feature: Occupation
+    label: Occupation
+    help: Only occupations that appear in the training data are listed
+    control: select
+    default: Engineer
+    options:
+      - {value: Accountant, label: Accountant}
+      - {value: Doctor, label: Doctor}
+      - {value: Engineer, label: Engineer}
+      - {value: Lawyer, label: Lawyer}
+      - {value: Nurse, label: Nurse}
+      - {value: Sales Representative, label: Sales representative}
+      - {value: Salesperson, label: Salesperson}
+      - {value: Scientist, label: Scientist}
+      - {value: Software Engineer, label: Software engineer}
+      - {value: Teacher, label: Teacher}
+  - key: bmi
+    group: About you
+    feature: BMI Category
+    label: BMI category
+    control: select
+    default: Normal
+    options: [{value: Normal, label: Normal weight}, {value: Overweight, label: Overweight}, {value: Obese, label: Obese}]
+  - {key: activity, group: Your day, feature: Physical Activity Level, label: Physical activity, help: Minutes of physical activity a day, unit: min a day, control: slider, min: 0, max: 120, step: 5, default: 60}
+  - {key: steps, group: Your day, feature: Daily Steps, label: Daily steps, unit: steps, control: slider, min: 1000, max: 15000, step: 500, default: 7000}
+  - {key: stress, group: Your day, feature: Stress Level, label: Stress level, help: Self-rated stress from 1 (low) to 10 (high), control: slider, min: 1, max: 10, step: 1, default: 5}
+  - {key: systolic, group: Heart and blood pressure, feature: Systolic BP, label: Systolic blood pressure, help: The top number of a blood pressure reading, unit: mmHg, control: slider, min: 90, max: 160, step: 1, default: 125, optional: true}
+  - {key: diastolic, group: Heart and blood pressure, feature: Diastolic BP, label: Diastolic blood pressure, help: The bottom number, unit: mmHg, control: slider, min: 60, max: 100, step: 1, default: 80, optional: true}
+  - {key: heartrate, group: Heart and blood pressure, feature: Heart Rate, label: Resting heart rate, unit: bpm, control: slider, min: 50, max: 100, step: 1, default: 70, optional: true}
+
+evaluationNote: >-
+  CV F1 is the mean over 10 stratified group folds of the 295 training records (also used for tuning).
+  Test scores come from 79 held-out records (16 distinct profiles) never used for training or tuning.
+limitations:
+  - Only 132 of the 374 records are distinct profiles, and the held-out test set holds just 16 of them, so the test scores rest on very few different people.
+  - Stress level carries the tree models. Without it, cross-validated F1 falls from 0.973 to 0.845 for the Decision Tree and from 0.991 to 0.806 for the Random Forest, while Logistic Regression rises to 0.957.
+  - Class balance varies widely across the ten folds (6% to 87% short sleep), and the same folds were used for tuning, so CV scores may be optimistic.
+  - Short sleep here means under 7 hours, not poor sleep quality or a sleep disorder. Predictions show associations, not causes, and are not medical advice.

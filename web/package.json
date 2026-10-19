@@ -1,0 +1,33 @@
+{
+  "name": "sleep-outcome-predictor",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "node scripts/copy-ort-wasm.mjs",
+    "dev": "next dev",
+    "prebuild": "node scripts/check-models.mjs",
+    "build": "next build",
+    "preview": "npx serve@14 out"
+  },
+  "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "5.3.0",
+    "@fontsource-variable/figtree": "5.3.0",
+    "clsx": "2.1.1",
+    "lucide-react": "1.59.0",
+    "motion": "14.3.0",
+    "next": "16.4.2",
+    "next-themes": "0.4.6",
+    "onnxruntime-web": "1.30.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "tailwind-merge": "3.7.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3"
+  }
+}

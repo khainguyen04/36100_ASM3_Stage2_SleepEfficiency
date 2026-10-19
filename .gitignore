@@ -1,0 +1,13 @@
+# .gitignore  (ở thư mục gốc)
+__pycache__/
+*.pyc
+.venv/
+web/node_modules/
+web/.next/
+web/out/
+web/public/ort/*.wasm
+web/public/ort/*.mjs
+.DS_Storevideo/node_modules/
+video/out/
+.env*
+video/node_modules/

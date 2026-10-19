@@ -1,0 +1,31 @@
+{
+  "target": "Poor Sleep",
+  "features": [
+    "Age",
+    "Gender",
+    "Smoking status",
+    "Alcohol consumption",
+    "Caffeine consumption",
+    "Exercise frequency",
+    "Time in Bed (h)",
+    "Bedtime (h from midnight)",
+    "Awakenings"
+  ],
+  "numeric_features": [
+    "Age",
+    "Alcohol consumption",
+    "Caffeine consumption",
+    "Time in Bed (h)",
+    "Bedtime (h from midnight)",
+    "Awakenings",
+    "Exercise frequency"
+  ],
+  "categorical_features": [
+    "Gender",
+    "Smoking status"
+  ],
+  "random_state": 42,
+  "n_cv_folds": 10,
+  "efficiency_threshold": 0.85,
+  "majority_baseline_f1": 0.7141
+}

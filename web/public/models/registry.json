@@ -1,0 +1,36 @@
+{
+  "datasets": [
+    {
+      "id": "sleep-efficiency",
+      "order": 1,
+      "title": "Sleep Efficiency",
+      "owner": "Nguyen Minh Khai",
+      "target": "Poor sleep efficiency",
+      "status": "ready"
+    },
+    {
+      "id": "screen-stress",
+      "order": 2,
+      "title": "Screen Time & Stress",
+      "owner": "Menghan Sun",
+      "target": "Poor sleep quality",
+      "status": "ready"
+    },
+    {
+      "id": "sleep-lifestyle",
+      "order": 3,
+      "title": "Sleep Health & Lifestyle",
+      "owner": "Jinyu Guo",
+      "target": "Short sleep",
+      "status": "ready"
+    },
+    {
+      "id": "nhanes-work",
+      "order": 4,
+      "title": "NHANES Work & Sleep",
+      "owner": "Zhequan Fu",
+      "target": "Short workday sleep",
+      "status": "pending"
+    }
+  ]
+}

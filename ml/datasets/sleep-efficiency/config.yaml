@@ -1,0 +1,77 @@
+# ml/datasets/sleep-efficiency/config.yaml
+id: sleep-efficiency
+status: ready
+order: 1
+title: Sleep Efficiency
+owner: {name: Nguyen Minh Khai, studentId: "26629725"}
+source:
+  name: Sleep Efficiency Dataset
+  citation: Equilibrium (2023)
+  url: https://www.kaggle.com/datasets/equilibriumm/sleep-efficiency
+n: 452
+
+target:
+  column: Poor Sleep
+  label: Poor sleep efficiency
+  definition: Sleep efficiency below 0.85 (less than 85% of time in bed spent asleep)
+  positive: Poor sleep
+  negative: Good sleep
+  citation: Ohayon et al. (2017)
+
+data:
+  train: data/train.csv
+  test: data/test.csv
+  cv_fold_column: cv_fold
+
+features:
+  numeric: [Age, Alcohol consumption, Caffeine consumption, Time in Bed (h), Bedtime (h from midnight), Awakenings, Exercise frequency]
+  categorical: [Gender, Smoking status]
+
+preprocessing:
+  numeric_impute: median
+  categorical_impute: {strategy: most_frequent}
+  onehot: {drop: if_binary}
+  scale_for: [lr]
+
+models:
+  lr: {params: {C: 1, penalty: l2, solver: liblinear, max_iter: 5000}, threshold: 0.5, recommended: true}
+  dt: {params: {criterion: entropy, max_depth: 5, min_samples_leaf: 1}, threshold: 0.5, highestF1: true}
+  rf: {params: {n_estimators: 100, max_depth: 4, max_features: 0.5, min_samples_leaf: 5}, threshold: 0.5}
+
+reference:            # Stage 2 report; export stops if the rebuilt models differ by more than the tolerance
+  tolerance: 0.002
+  lr: {cvF1: 0.884, testF1: 0.863}
+  dt: {cvF1: 0.900, testF1: 0.872}
+  rf: {cvF1: 0.885, testF1: 0.854}
+
+inputs:                # shown in this order; `group` sets the form section
+  - {key: bedtime, group: Your night, label: Bedtime, help: When you usually go to bed, control: time, default: "23:00"}
+  - {key: wakeup, group: Your night, label: Wake-up time, help: When you usually get up, control: time, default: "07:00"}
+  - {key: awakenings, group: Your night, feature: Awakenings, label: Night awakenings, help: Times you wake up during the night, control: slider, min: 0, max: 4, step: 1, default: 1, optional: true}
+  - {key: alcohol, group: Your day, feature: Alcohol consumption, label: Alcohol, help: Standard drinks in the 24 hours before bed, unit: drinks, control: slider, min: 0, max: 5, step: 1, default: 0, optional: true}
+  - {key: caffeine, group: Your day, feature: Caffeine consumption, label: Caffeine, help: Caffeine in the 24 hours before bed (one coffee is about 100 mg), unit: mg, control: slider, min: 0, max: 200, step: 25, default: 50, optional: true}
+  - {key: exercise, group: Your day, feature: Exercise frequency, label: Exercise, help: Exercise sessions per week, unit: per week, control: slider, min: 0, max: 5, step: 1, default: 2, optional: true}
+  - {key: age, group: About you, feature: Age, label: Age, unit: years, control: slider, min: 9, max: 69, step: 1, default: 35}
+  - key: gender
+    group: About you
+    feature: Gender
+    label: Gender
+    control: select
+    default: Female
+    options: [{value: Female, label: Female}, {value: Male, label: Male}]
+  - key: smoking
+    group: About you
+    feature: Smoking status
+    label: Smoking
+    control: select
+    default: "No"
+    options: [{value: "No", label: Non-smoker}, {value: "Yes", label: Smoker}]
+
+evaluationNote: >-
+  CV F1 is the mean over 10 stratified group folds of the 362 training participants (also used for tuning).
+  Test scores come from 90 held-out participants never used for training or tuning.
+limitations:
+  - Awakenings almost determines the label at the 85% cut-off (0 awakenings were always good sleepers, 2 or more always poor).
+  - Without awakenings, the lifestyle factors alone predict little better than guessing (F1 about 0.72 against a baseline of 0.71).
+  - One community sample of 452 people (ages 9 to 69); lifestyle inputs are self-reported 24-hour amounts, not timing.
+  - Predictions show statistical associations, not causes, and are not medical advice.

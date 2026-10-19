@@ -1,0 +1,7 @@
+# ml/datasets/nhanes-work/config.yaml
+id: nhanes-work
+status: pending          # set to ready once data/ and the sections below are filled in
+order: 4
+title: NHANES Work & Sleep
+owner: {name: Zhequan Fu, studentId: "26493510"}
+target: {label: Short workday sleep, definition: "Weekday or workday sleep below 7 hours"}

@@ -1,0 +1,56 @@
+id: screen-stress
+status: ready
+order: 2
+title: Screen Time & Stress
+owner: {name: Menghan Sun, studentId: "26281384"}
+source:
+  name: Sleep, Screen Time and Stress Dataset
+  citation: Joshi (2026)
+n: 15000
+
+target:
+  column: poor_sleep
+  label: Poor sleep quality
+  definition: Sleep quality score of 5 or below on a 1 to 10 scale
+  positive: Poor sleep quality
+  negative: Good sleep quality
+  citation: Rood et al. (2019)
+  prevalence: 0.2507     # whole dataset (3,760 of 15,000)
+
+data:                    # written by prepare.py
+  train: data/train.csv
+  test: data/test.csv
+
+features:                # same order as Menghan's selected_features
+  numeric: [stress_level, daily_screen_time_hours, phone_usage_before_sleep_minutes, mental_fatigue_score]
+
+preprocessing:           # no missing values in the data, so the median imputer only matters for safety
+  numeric_impute: median
+  scale_for: [lr]
+
+models:                  # Menghan's GridSearchCV choices (Appendix Table 15)
+  lr: {params: {C: 1, penalty: l2, solver: saga, max_iter: 5000}, threshold: 0.5}
+  dt: {params: {criterion: gini, max_depth: 3, min_samples_leaf: 5}, threshold: 0.5, recommended: true}
+  rf: {params: {n_estimators: 200, max_depth: 5, max_features: sqrt}, threshold: 0.5, highestF1: true}
+
+reference:               # Menghan's notebook: 10-fold CV F1 of the selected settings (Table 15) and hold-out test F1
+  tolerance: 0.002
+  lr: {cvF1: 0.762, testF1: 0.756}
+  dt: {cvF1: 0.772, testF1: 0.771}
+  rf: {cvF1: 0.773, testF1: 0.779}
+
+inputs:                  # shown in this order; `group` sets the form section
+  - {key: stress, group: How you feel, feature: stress_level, label: Stress level, help: From 1 (low) to 10 (high), control: slider, min: 1, max: 10, step: 0.5, default: 6}
+  - {key: fatigue, group: How you feel, feature: mental_fatigue_score, label: Mental fatigue, help: From 1 (low) to 10 (high), control: slider, min: 1, max: 10, step: 0.5, default: 6}
+  - {key: screen, group: Your day, feature: daily_screen_time_hours, label: Daily screen time, unit: hours, control: slider, min: 1, max: 10, step: 0.5, default: 5}
+  - {key: phone, group: Your day, feature: phone_usage_before_sleep_minutes, label: Phone use before sleep, help: Minutes on the phone in the last stretch before sleep, unit: min, control: slider, min: 0, max: 120, step: 5, default: 60}
+
+evaluationNote: >-
+  CV F1 is the mean over 10 stratified folds of the 12,000 training records, using the selected settings
+  (Menghan's Table 15). Her nested cross-validation, which re-tunes inside every fold, gives 0.761, 0.769 and
+  0.773 (Table 6). Test scores come from 3,000 held-out records never used for training or tuning.
+limitations:
+  - Stress level carries the models. It correlates −0.86 with sleep quality in this dataset and is the Decision Tree's first question.
+  - Only four of the recorded behaviours are used, chosen from the Stage 1 correlations, so age, caffeine, activity and notifications play no part.
+  - Random Forest is significantly better than Logistic Regression, but not than the Decision Tree, so the simpler tree is recommended under the group rule.
+  - Poor sleep here means a sleep quality score of 5 or below, not short sleep or a sleep disorder. Predictions show associations, not causes, and are not medical advice.

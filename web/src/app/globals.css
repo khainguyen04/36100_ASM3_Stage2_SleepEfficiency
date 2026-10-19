@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+/* The app is dark only: <html class="dark"> switches on every dark: style in Magic UI components. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Figtree Variable", ui-sans-serif, system-ui, sans-serif;
+
+  /* Night palette */
+  --color-night: #070c26; /* page */
+  --color-panel: #0d1638; /* raised surfaces */
+  --color-panel-2: #131e48; /* hover, tracks */
+  --color-line: #1e2a5c; /* borders, grid */
+  --color-ink: #eef1fa; /* primary text */
+  --color-muted: #8c96be; /* secondary text */
+  --color-poor: #f2474c; /* positive class: the poor outcome */
+  --color-good: #5b8cff; /* negative class: the good outcome */
+  --color-brand: #da1311; /* group red */
+  --color-royal: #10468f; /* group royal blue */
+
+  /* Names Magic UI components read */
+  --color-background: #0d1638;
+  --color-foreground: #eef1fa;
+  --color-border: #1e2a5c;
+  --color-muted-foreground: #8c96be;
+
+  --animate-shiny-text: shiny-text 8s infinite;
+  @keyframes shiny-text {
+    0%,
+    90%,
+    100% {
+      background-position: calc(-100% - var(--shiny-width)) 0;
+    }
+    30%,
+    60% {
+      background-position: calc(100% + var(--shiny-width)) 0;
+    }
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    background-color: var(--color-night);
+    color: var(--color-ink);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-good);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--color-good) 35%, transparent);
+  }
+}
+
+/* Range slider: the filled part follows --fill (set inline as a percentage). */
+.range {
+  appearance: none;
+  width: 100%;
+  height: 1.5rem;
+  background: transparent;
+  cursor: pointer;
+}
+.range::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(to right, var(--color-ink) var(--fill), var(--color-line) var(--fill));
+}
+.range::-moz-range-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-line);
+}
+.range::-moz-range-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-ink);
+}
+.range::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin-top: -6px;
+  border-radius: 999px;
+  background: var(--color-ink);
+  border: 3px solid var(--color-night);
+  box-shadow: 0 0 0 1px var(--color-ink);
+}
+.range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--color-ink);
+  border: 3px solid var(--color-night);
+}
+.range:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+.range:focus-visible {
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

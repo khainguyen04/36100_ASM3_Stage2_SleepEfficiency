@@ -1,0 +1,36 @@
+{
+  "dataset": "sleep-efficiency",
+  "models": {
+    "lr": {
+      "cvF1": 0.8836,
+      "cvF1Sd": 0.0453,
+      "testF1": 0.8632,
+      "testAccuracy": 0.8556,
+      "testPrecision": 0.9111,
+      "testRecall": 0.82,
+      "onnxMaxAbsDiff": 1.1457059517772095e-07,
+      "onnxKB": 2.9
+    },
+    "dt": {
+      "cvF1": 0.9004,
+      "cvF1Sd": 0.043,
+      "testF1": 0.8723,
+      "testAccuracy": 0.8667,
+      "testPrecision": 0.9318,
+      "testRecall": 0.82,
+      "onnxMaxAbsDiff": 2.5544847792602354e-08,
+      "onnxKB": 3.5
+    },
+    "rf": {
+      "cvF1": 0.8854,
+      "cvF1Sd": 0.0411,
+      "testF1": 0.8539,
+      "testAccuracy": 0.8556,
+      "testPrecision": 0.9744,
+      "testRecall": 0.76,
+      "onnxMaxAbsDiff": 1.8294702330834411e-07,
+      "onnxKB": 61.9
+    }
+  },
+  "problems": []
+}

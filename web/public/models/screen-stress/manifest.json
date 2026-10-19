@@ -1,0 +1,235 @@
+{
+  "id": "screen-stress",
+  "title": "Screen Time & Stress",
+  "owner": {
+    "name": "Menghan Sun",
+    "studentId": "26281384"
+  },
+  "source": {
+    "name": "Sleep, Screen Time and Stress Dataset",
+    "citation": "Joshi (2026)"
+  },
+  "n": 15000,
+  "target": {
+    "label": "Poor sleep quality",
+    "definition": "Sleep quality score of 5 or below on a 1 to 10 scale",
+    "positive": "Poor sleep quality",
+    "negative": "Good sleep quality",
+    "citation": "Rood et al. (2019)",
+    "prevalence": 0.2507
+  },
+  "inputs": [
+    {
+      "key": "stress",
+      "group": "How you feel",
+      "feature": "stress_level",
+      "label": "Stress level",
+      "help": "From 1 (low) to 10 (high)",
+      "control": "slider",
+      "min": 1,
+      "max": 10,
+      "step": 0.5,
+      "default": 6
+    },
+    {
+      "key": "fatigue",
+      "group": "How you feel",
+      "feature": "mental_fatigue_score",
+      "label": "Mental fatigue",
+      "help": "From 1 (low) to 10 (high)",
+      "control": "slider",
+      "min": 1,
+      "max": 10,
+      "step": 0.5,
+      "default": 6
+    },
+    {
+      "key": "screen",
+      "group": "Your day",
+      "feature": "daily_screen_time_hours",
+      "label": "Daily screen time",
+      "unit": "hours",
+      "control": "slider",
+      "min": 1,
+      "max": 10,
+      "step": 0.5,
+      "default": 5
+    },
+    {
+      "key": "phone",
+      "group": "Your day",
+      "feature": "phone_usage_before_sleep_minutes",
+      "label": "Phone use before sleep",
+      "help": "Minutes on the phone in the last stretch before sleep",
+      "unit": "min",
+      "control": "slider",
+      "min": 0,
+      "max": 120,
+      "step": 5,
+      "default": 60
+    }
+  ],
+  "features": [
+    {
+      "name": "stress_level",
+      "onnxInput": "stress_level",
+      "dtype": "float32",
+      "from": "stress",
+      "trainingRange": [
+        1.0,
+        10.0
+      ]
+    },
+    {
+      "name": "daily_screen_time_hours",
+      "onnxInput": "daily_screen_time_hours",
+      "dtype": "float32",
+      "from": "screen",
+      "trainingRange": [
+        1.0,
+        10.0
+      ]
+    },
+    {
+      "name": "phone_usage_before_sleep_minutes",
+      "onnxInput": "phone_usage_before_sleep_minutes",
+      "dtype": "float32",
+      "from": "phone",
+      "trainingRange": [
+        0.0,
+        119.0
+      ]
+    },
+    {
+      "name": "mental_fatigue_score",
+      "onnxInput": "mental_fatigue_score",
+      "dtype": "float32",
+      "from": "fatigue",
+      "trainingRange": [
+        1.0,
+        10.0
+      ]
+    }
+  ],
+  "models": [
+    {
+      "id": "lr",
+      "name": "Logistic Regression",
+      "file": "lr.onnx",
+      "threshold": 0.5,
+      "params": {
+        "C": 1,
+        "penalty": "l2",
+        "solver": "saga",
+        "max_iter": 5000
+      },
+      "metrics": {
+        "cvF1": 0.762,
+        "cvF1Sd": 0.0105,
+        "testF1": 0.7555,
+        "testAccuracy": 0.8747,
+        "testPrecision": 0.7392,
+        "testRecall": 0.7726
+      },
+      "recommended": false,
+      "highestF1": false
+    },
+    {
+      "id": "dt",
+      "name": "Decision Tree",
+      "file": "dt.onnx",
+      "threshold": 0.5,
+      "params": {
+        "criterion": "gini",
+        "max_depth": 3,
+        "min_samples_leaf": 5
+      },
+      "metrics": {
+        "cvF1": 0.7719,
+        "cvF1Sd": 0.0188,
+        "testF1": 0.7711,
+        "testAccuracy": 0.8807,
+        "testPrecision": 0.7426,
+        "testRecall": 0.8019
+      },
+      "recommended": true,
+      "highestF1": false
+    },
+    {
+      "id": "rf",
+      "name": "Random Forest",
+      "file": "rf.onnx",
+      "threshold": 0.5,
+      "params": {
+        "n_estimators": 200,
+        "max_depth": 5,
+        "max_features": "sqrt"
+      },
+      "metrics": {
+        "cvF1": 0.7734,
+        "cvF1Sd": 0.0131,
+        "testF1": 0.7793,
+        "testAccuracy": 0.8863,
+        "testPrecision": 0.7591,
+        "testRecall": 0.8005
+      },
+      "recommended": false,
+      "highestF1": true
+    }
+  ],
+  "insights": {
+    "lrCoefficients": [
+      {
+        "feature": "stress_level",
+        "coef": 3.9876,
+        "oddsRatio": 53.9272
+      },
+      {
+        "feature": "phone_usage_before_sleep_minutes",
+        "coef": 0.837,
+        "oddsRatio": 2.3094
+      },
+      {
+        "feature": "daily_screen_time_hours",
+        "coef": 0.4256,
+        "oddsRatio": 1.5305
+      },
+      {
+        "feature": "mental_fatigue_score",
+        "coef": -0.0357,
+        "oddsRatio": 0.965
+      }
+    ],
+    "rfImportances": [
+      {
+        "feature": "stress_level",
+        "importance": 0.6126
+      },
+      {
+        "feature": "mental_fatigue_score",
+        "importance": 0.1971
+      },
+      {
+        "feature": "daily_screen_time_hours",
+        "importance": 0.1146
+      },
+      {
+        "feature": "phone_usage_before_sleep_minutes",
+        "importance": 0.0757
+      }
+    ],
+    "dtRootSplit": {
+      "feature": "stress_level",
+      "threshold": 9.735,
+      "criterion": "gini",
+      "impurityDecrease": 0.1797
+    }
+  },
+  "evaluationNote": "CV F1 is the mean over 10 stratified folds of the 12,000 training records, using the selected settings (Menghan's Table 15). Her nested cross-validation, which re-tunes inside every fold, gives 0.761, 0.769 and 0.773 (Table 6). Test scores come from 3,000 held-out records never used for training or tuning.",
+  "limitations": [
+    "Stress level carries the models. It correlates −0.86 with sleep quality in this dataset and is the Decision Tree's first question.",
+    "Only four of the recorded behaviours are used, chosen from the Stage 1 correlations, so age, caffeine, activity and notifications play no part.",
+    "Random Forest is significantly better than Logistic Regression, but not than the Decision Tree, so the simpler tree is recommended under the group rule.",
+    "Poor sleep here means a sleep quality score of 5 or below, not short sleep or a sleep disorder. Predictions show associations, not causes, and are not medical advice."
+  ]
+}

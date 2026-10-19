@@ -1,0 +1,36 @@
+{
+  "dataset": "sleep-lifestyle",
+  "models": {
+    "lr": {
+      "cvF1": 0.9342,
+      "cvF1Sd": 0.1562,
+      "testF1": 0.9615,
+      "testAccuracy": 0.9747,
+      "testPrecision": 0.9615,
+      "testRecall": 0.9615,
+      "onnxMaxAbsDiff": 5.907714351049975e-08,
+      "onnxKB": 3.6
+    },
+    "dt": {
+      "cvF1": 0.9733,
+      "cvF1Sd": 0.0599,
+      "testF1": 0.8936,
+      "testAccuracy": 0.9367,
+      "testPrecision": 1.0,
+      "testRecall": 0.8077,
+      "onnxMaxAbsDiff": 4.967053740534411e-09,
+      "onnxKB": 3.7
+    },
+    "rf": {
+      "cvF1": 0.9909,
+      "cvF1Sd": 0.0287,
+      "testF1": 0.9804,
+      "testAccuracy": 0.9873,
+      "testPrecision": 1.0,
+      "testRecall": 0.9615,
+      "onnxMaxAbsDiff": 1.0993648302815018e-07,
+      "onnxKB": 63.9
+    }
+  },
+  "problems": []
+}

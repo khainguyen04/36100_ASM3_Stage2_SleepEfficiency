@@ -1,0 +1,36 @@
+{
+  "dataset": "screen-stress",
+  "models": {
+    "lr": {
+      "cvF1": 0.762,
+      "cvF1Sd": 0.0105,
+      "testF1": 0.7555,
+      "testAccuracy": 0.8747,
+      "testPrecision": 0.7392,
+      "testRecall": 0.7726,
+      "onnxMaxAbsDiff": 3.892625888290979e-07,
+      "onnxKB": 0.9
+    },
+    "dt": {
+      "cvF1": 0.7719,
+      "cvF1Sd": 0.0188,
+      "testF1": 0.7711,
+      "testAccuracy": 0.8807,
+      "testPrecision": 0.7426,
+      "testRecall": 0.8019,
+      "onnxMaxAbsDiff": 1.7825688147787844e-08,
+      "onnxKB": 1.5
+    },
+    "rf": {
+      "cvF1": 0.7734,
+      "cvF1Sd": 0.0131,
+      "testF1": 0.7793,
+      "testAccuracy": 0.8863,
+      "testPrecision": 0.7591,
+      "testRecall": 0.8005,
+      "onnxMaxAbsDiff": 1.969973526527724e-07,
+      "onnxKB": 448.2
+    }
+  },
+  "problems": []
+}

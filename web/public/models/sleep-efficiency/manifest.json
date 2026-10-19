@@ -1,0 +1,402 @@
+{
+  "id": "sleep-efficiency",
+  "title": "Sleep Efficiency",
+  "owner": {
+    "name": "Nguyen Minh Khai",
+    "studentId": "26629725"
+  },
+  "source": {
+    "name": "Sleep Efficiency Dataset",
+    "citation": "Equilibrium (2023)",
+    "url": "https://www.kaggle.com/datasets/equilibriumm/sleep-efficiency"
+  },
+  "n": 452,
+  "target": {
+    "label": "Poor sleep efficiency",
+    "definition": "Sleep efficiency below 0.85 (less than 85% of time in bed spent asleep)",
+    "positive": "Poor sleep",
+    "negative": "Good sleep",
+    "citation": "Ohayon et al. (2017)",
+    "prevalence": 0.5552
+  },
+  "inputs": [
+    {
+      "key": "bedtime",
+      "group": "Your night",
+      "label": "Bedtime",
+      "help": "When you usually go to bed",
+      "control": "time",
+      "default": "23:00"
+    },
+    {
+      "key": "wakeup",
+      "group": "Your night",
+      "label": "Wake-up time",
+      "help": "When you usually get up",
+      "control": "time",
+      "default": "07:00"
+    },
+    {
+      "key": "awakenings",
+      "group": "Your night",
+      "feature": "Awakenings",
+      "label": "Night awakenings",
+      "help": "Times you wake up during the night",
+      "control": "slider",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "default": 1,
+      "optional": true
+    },
+    {
+      "key": "alcohol",
+      "group": "Your day",
+      "feature": "Alcohol consumption",
+      "label": "Alcohol",
+      "help": "Standard drinks in the 24 hours before bed",
+      "unit": "drinks",
+      "control": "slider",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "default": 0,
+      "optional": true
+    },
+    {
+      "key": "caffeine",
+      "group": "Your day",
+      "feature": "Caffeine consumption",
+      "label": "Caffeine",
+      "help": "Caffeine in the 24 hours before bed (one coffee is about 100 mg)",
+      "unit": "mg",
+      "control": "slider",
+      "min": 0,
+      "max": 200,
+      "step": 25,
+      "default": 50,
+      "optional": true
+    },
+    {
+      "key": "exercise",
+      "group": "Your day",
+      "feature": "Exercise frequency",
+      "label": "Exercise",
+      "help": "Exercise sessions per week",
+      "unit": "per week",
+      "control": "slider",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "default": 2,
+      "optional": true
+    },
+    {
+      "key": "age",
+      "group": "About you",
+      "feature": "Age",
+      "label": "Age",
+      "unit": "years",
+      "control": "slider",
+      "min": 9,
+      "max": 69,
+      "step": 1,
+      "default": 35
+    },
+    {
+      "key": "gender",
+      "group": "About you",
+      "feature": "Gender",
+      "label": "Gender",
+      "control": "select",
+      "default": "Female",
+      "options": [
+        {
+          "value": "Female",
+          "label": "Female"
+        },
+        {
+          "value": "Male",
+          "label": "Male"
+        }
+      ]
+    },
+    {
+      "key": "smoking",
+      "group": "About you",
+      "feature": "Smoking status",
+      "label": "Smoking",
+      "control": "select",
+      "default": "No",
+      "options": [
+        {
+          "value": "No",
+          "label": "Non-smoker"
+        },
+        {
+          "value": "Yes",
+          "label": "Smoker"
+        }
+      ]
+    }
+  ],
+  "features": [
+    {
+      "name": "Age",
+      "onnxInput": "Age",
+      "dtype": "float32",
+      "from": "age",
+      "trainingRange": [
+        9.0,
+        69.0
+      ]
+    },
+    {
+      "name": "Alcohol consumption",
+      "onnxInput": "Alcohol_consumption",
+      "dtype": "float32",
+      "from": "alcohol",
+      "trainingRange": [
+        0.0,
+        5.0
+      ]
+    },
+    {
+      "name": "Caffeine consumption",
+      "onnxInput": "Caffeine_consumption",
+      "dtype": "float32",
+      "from": "caffeine",
+      "trainingRange": [
+        0.0,
+        200.0
+      ]
+    },
+    {
+      "name": "Time in Bed (h)",
+      "onnxInput": "Time_in_Bed__h_",
+      "dtype": "float32",
+      "from": "adapter",
+      "trainingRange": [
+        5.0,
+        10.0
+      ]
+    },
+    {
+      "name": "Bedtime (h from midnight)",
+      "onnxInput": "Bedtime__h_from_midnight_",
+      "dtype": "float32",
+      "from": "adapter",
+      "trainingRange": [
+        -3.0,
+        2.5
+      ]
+    },
+    {
+      "name": "Awakenings",
+      "onnxInput": "Awakenings",
+      "dtype": "float32",
+      "from": "awakenings",
+      "trainingRange": [
+        0.0,
+        4.0
+      ]
+    },
+    {
+      "name": "Exercise frequency",
+      "onnxInput": "Exercise_frequency",
+      "dtype": "float32",
+      "from": "exercise",
+      "trainingRange": [
+        0.0,
+        5.0
+      ]
+    },
+    {
+      "name": "Gender",
+      "onnxInput": "Gender",
+      "dtype": "string",
+      "from": "gender",
+      "categories": [
+        "Female",
+        "Male"
+      ]
+    },
+    {
+      "name": "Smoking status",
+      "onnxInput": "Smoking_status",
+      "dtype": "string",
+      "from": "smoking",
+      "categories": [
+        "No",
+        "Yes"
+      ]
+    }
+  ],
+  "models": [
+    {
+      "id": "lr",
+      "name": "Logistic Regression",
+      "file": "lr.onnx",
+      "threshold": 0.5,
+      "params": {
+        "C": 1,
+        "penalty": "l2",
+        "solver": "liblinear",
+        "max_iter": 5000
+      },
+      "metrics": {
+        "cvF1": 0.8836,
+        "cvF1Sd": 0.0453,
+        "testF1": 0.8632,
+        "testAccuracy": 0.8556,
+        "testPrecision": 0.9111,
+        "testRecall": 0.82
+      },
+      "recommended": true,
+      "highestF1": false
+    },
+    {
+      "id": "dt",
+      "name": "Decision Tree",
+      "file": "dt.onnx",
+      "threshold": 0.5,
+      "params": {
+        "criterion": "entropy",
+        "max_depth": 5,
+        "min_samples_leaf": 1
+      },
+      "metrics": {
+        "cvF1": 0.9004,
+        "cvF1Sd": 0.043,
+        "testF1": 0.8723,
+        "testAccuracy": 0.8667,
+        "testPrecision": 0.9318,
+        "testRecall": 0.82
+      },
+      "recommended": false,
+      "highestF1": true
+    },
+    {
+      "id": "rf",
+      "name": "Random Forest",
+      "file": "rf.onnx",
+      "threshold": 0.5,
+      "params": {
+        "n_estimators": 100,
+        "max_depth": 4,
+        "max_features": 0.5,
+        "min_samples_leaf": 5
+      },
+      "metrics": {
+        "cvF1": 0.8854,
+        "cvF1Sd": 0.0411,
+        "testF1": 0.8539,
+        "testAccuracy": 0.8556,
+        "testPrecision": 0.9744,
+        "testRecall": 0.76
+      },
+      "recommended": false,
+      "highestF1": false
+    }
+  ],
+  "insights": {
+    "lrCoefficients": [
+      {
+        "feature": "Awakenings",
+        "coef": 4.0615,
+        "oddsRatio": 58.0606
+      },
+      {
+        "feature": "Smoking status_Yes",
+        "coef": 0.7352,
+        "oddsRatio": 2.0859
+      },
+      {
+        "feature": "Alcohol consumption",
+        "coef": 0.6447,
+        "oddsRatio": 1.9054
+      },
+      {
+        "feature": "Exercise frequency",
+        "coef": -0.5447,
+        "oddsRatio": 0.58
+      },
+      {
+        "feature": "Age",
+        "coef": -0.1631,
+        "oddsRatio": 0.8495
+      },
+      {
+        "feature": "Bedtime (h from midnight)",
+        "coef": -0.1083,
+        "oddsRatio": 0.8973
+      },
+      {
+        "feature": "Time in Bed (h)",
+        "coef": 0.0501,
+        "oddsRatio": 1.0514
+      },
+      {
+        "feature": "Caffeine consumption",
+        "coef": 0.0268,
+        "oddsRatio": 1.0272
+      },
+      {
+        "feature": "Gender_Male",
+        "coef": -0.016,
+        "oddsRatio": 0.9842
+      }
+    ],
+    "rfImportances": [
+      {
+        "feature": "Awakenings",
+        "importance": 0.7635
+      },
+      {
+        "feature": "Alcohol consumption",
+        "importance": 0.0859
+      },
+      {
+        "feature": "Exercise frequency",
+        "importance": 0.0699
+      },
+      {
+        "feature": "Age",
+        "importance": 0.0334
+      },
+      {
+        "feature": "Bedtime (h from midnight)",
+        "importance": 0.0178
+      },
+      {
+        "feature": "Smoking status_Yes",
+        "importance": 0.0096
+      },
+      {
+        "feature": "Time in Bed (h)",
+        "importance": 0.0082
+      },
+      {
+        "feature": "Caffeine consumption",
+        "importance": 0.0075
+      },
+      {
+        "feature": "Gender_Male",
+        "importance": 0.0042
+      }
+    ],
+    "dtRootSplit": {
+      "feature": "Awakenings",
+      "threshold": 1.5,
+      "criterion": "entropy",
+      "impurityDecrease": 0.4973
+    }
+  },
+  "evaluationNote": "CV F1 is the mean over 10 stratified group folds of the 362 training participants (also used for tuning). Test scores come from 90 held-out participants never used for training or tuning.",
+  "limitations": [
+    "Awakenings almost determines the label at the 85% cut-off (0 awakenings were always good sleepers, 2 or more always poor).",
+    "Without awakenings, the lifestyle factors alone predict little better than guessing (F1 about 0.72 against a baseline of 0.71).",
+    "One community sample of 452 people (ages 9 to 69); lifestyle inputs are self-reported 24-hour amounts, not timing.",
+    "Predictions show statistical associations, not causes, and are not medical advice."
+  ]
+}
