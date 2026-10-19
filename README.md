@@ -384,41 +384,6 @@ model). For people who ask their system for reduced motion, the starfield is hid
 screen readers, each ring has a text label, colour is never the only signal (text and icons accompany it), and the
 layout adapts to phone screens. On phones a small bar keeps the three probabilities in view while you fill in the form.
 
-## Adding a teammate's dataset
-
-The tab for Zhequan (`nhanes-work`) already exists. To make it live:
-
-1. **Data.** Put the rows exactly as they went into the final models (cleaned, before scaling and encoding, with the
-   target column) in `ml/datasets/<slug>/data/train.csv` and `test.csv`. Add a `cv_fold` column if the report used
-   specific folds; otherwise the fallback folds are used. If the data has to be derived from a raw file, write a
-   `prepare.py` like Jinyu's.
-2. **Config.** Fill in `ml/datasets/<slug>/config.yaml`:
-
-   | Key | What it holds |
-   |---|---|
-   | `id`, `status`, `order`, `title` | slug, `ready` or `pending`, tab position, tab title |
-   | `owner`, `source`, `n` | name and student ID; dataset name, citation and URL; number of records |
-   | `target` | `column`, `label`, `definition`, `positive`, `negative`, `citation`, optional `prevalence` (else the training rate) |
-   | `data` | paths to train and test CSV, optional `cv_fold_column` |
-   | `features` | `numeric` and `categorical` column lists, in the order the model used them |
-   | `preprocessing` | `numeric_impute`, `categorical_impute`, `onehot` (for example `{drop: if_binary}` or `{handle_unknown: ignore}`), `scale_for` |
-   | `models` | for `lr`, `dt`, `rf`: `params`, `threshold`, and `recommended: true` or `highestF1: true` where they apply |
-   | `reference` | the report's `cvF1` and `testF1` for each model, and the `tolerance` |
-   | `inputs` | one entry per form control: `key`, `group`, `feature` (the column it feeds), `label`, `help`, `unit`, `control` (`slider`, `number`, `select`, `time`), `min`, `max`, `step`, `default`, `options`, `optional` |
-   | `evaluationNote`, `limitations` | text shown under the cards and in "Read with care" |
-
-   Use the live configs as templates. Extra model settings such as `class_weight: balanced` go in `params`, and a
-   custom cut-off goes in `threshold` (Zhequan's LR uses 0.45).
-3. **Adapter (only if needed).** If an input must be converted before it reaches the model, add
-   `web/src/lib/adapters/<slug>.ts` and register it in `web/src/lib/adapters/index.ts`. Features that no input links to
-   through `feature` are recorded in the manifest as `from: "adapter"`.
-4. **Export and check.** Set `status: ready`, run `python ml/export_all.py --only <slug>`, and confirm that the
-   printed scores match the report and `ml/reports/<slug>.json` lists no problems.
-5. **Commit** the generated `web/public/models/<slug>/` folder and `registry.json`.
-
-**Still to confirm with Zhequan:** readable labels for the NHANES codes (OCQ180, OCQ215, RIDAGEYR, RIAGENDR,
-DMDEDUC2, INDFMPIR), the 0.45 LR threshold and the class weights. His held-out F1 is about 0.36, and the tab must
-present that model as weak rather than reliable.
 
 ## Deploying
 
