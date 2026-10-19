@@ -75,14 +75,6 @@ npm install          # also copies the onnxruntime-web runtime into public/ort
 npm run dev          # open http://localhost:3000
 ~~~
 
-Press Ctrl+C to stop. With the default answers you should see:
-
-| Tab | Logistic Regression | Decision Tree | Random Forest | Verdict |
-|---|---|---|---|---|
-| Sleep Efficiency | 26% | 18% | 22% | All three models predict good sleep |
-| Screen Time & Stress | 0% | 1% | 1% | All three models predict good sleep quality |
-| Sleep Health & Lifestyle | 3% | 0% | 0% | All three models predict enough sleep |
-| NHANES Work & Sleep | | | | |
 
 To try a few changes: on Sleep Efficiency set awakenings to 2 (the three models jump to about 89%, 100% and 95%);
 on Screen Time & Stress move stress level to 10 and mental fatigue to 8 (65%, 85% and 65%).
